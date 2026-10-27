@@ -25,6 +25,29 @@ Android: mở Expo Go tương thích SDK 57, quét mã QR trong terminal hoặc 
 Máy tính và điện thoại nên dùng cùng mạng Wi-Fi.
 Nếu dùng Android Emulator, mở máy ảo trước rồi nhấn `a` trong terminal Expo.
 
+### Chạy với LDPlayer
+
+Mở hai terminal tại thư mục project:
+
+```sh
+# Terminal 1: AI proxy
+npm run server
+```
+
+```sh
+# Terminal 2: Expo cho LDPlayer
+npm run start:ldplayer
+```
+
+Nếu Metro cũ đang chạy, nhấn Ctrl+C ở terminal đó trước khi chạy lệnh trên.
+Trong Expo Go trên LDPlayer, nhập URL `exp://<IP>:8081` mà lệnh in ra.
+Lệnh `start:ldplayer` xóa cache Metro và tự chọn IP Wi-Fi của Windows cho cả Metro
+lẫn AI proxy (cổng 3001). Server cần `HOST=0.0.0.0`, `PORT=3001`.
+Máy LDPlayer hiện tại đã kiểm tra truy cập Metro qua IP LAN; `10.0.2.2` bị timeout.
+Để kiểm tra kết nối, mở `http://<IP>:8081/status` (hiện `packager-status:running`)
+và `http://<IP>:3001/health` (hiện JSON) trong Chrome trên LDPlayer.
+Nếu dùng Ethernet, đặt `$env:LDPLAYER_HOST="<IP-LAN>"` trong PowerShell trước khi chạy.
+
 ### Các file chính
 
 - `index.js`: đăng ký component gốc của ứng dụng.
@@ -59,8 +82,9 @@ API key Gemini chỉ đặt ở server; app không chứa key này.
    `GEMINI_MODEL` và `FIREBASE_WEB_API_KEY` **cùng project Firebase với app**.
 3. Chạy `npm run server` (một terminal riêng). `/health` cho biết trạng thái cấu hình,
    không chứng minh key/quota hợp lệ cho tới khi request thật thành công.
-4. Để truy cập từ LDPlayer/điện thoại: đặt `HOST=0.0.0.0` trong `server/.env`;
-   đặt `EXPO_PUBLIC_AI_PROXY_URL=http://<IP-LAN-máy-tính>:3001` trong `.env` của app.
+4. Đặt `HOST=0.0.0.0` trong `server/.env`. Với LDPlayer, dùng
+   `npm run start:ldplayer` như hướng dẫn trên. Với điện thoại cùng Wi-Fi, đặt
+   `EXPO_PUBLIC_AI_PROXY_URL=http://<IP-LAN-máy-tính>:3001` trong `.env` của app.
 5. Khởi động lại Metro. Mở Tư vấn AI, nhập từ khóa tiếng Anh để tìm catalog và nhu cầu tiếng Việt.
 
 Proxy xác minh Firebase ID token, tự lấy catalog từ DummyJSON, giới hạn 5 request/UID/phút,

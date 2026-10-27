@@ -19,6 +19,7 @@
   },
   "scripts": {
     "start": "expo start",
+    "start:ldplayer": "node scripts/start-ldplayer.cjs",
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
