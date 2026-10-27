@@ -1,5 +1,6 @@
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { useEffect, useRef } from 'react';
 import { Text, Pressable } from 'react-native';
 import { colors } from '../theme';
 import ProductListScreen from '../screens/ProductListScreen';
@@ -8,10 +9,27 @@ import CartScreen from '../screens/CartScreen';
 import WishlistScreen from '../screens/WishlistScreen';
 import AIScreen from '../screens/AIScreen';
 import SettingsScreen from '../screens/SettingsScreen';
+import { Notifications } from '../services/notificationService';
 
 const Stack = createNativeStackNavigator();
 export default function AppNavigator() {
-  return <NavigationContainer>
+  const navigation = useRef(null);
+  const pendingCart = useRef(false);
+  useEffect(() => {
+    let live = true;
+    const openCart = (response) => {
+      if (response?.notification?.request?.content?.data?.screen !== 'Cart') return;
+      if (navigation.current?.isReady()) navigation.current.navigate('Cart');
+      else pendingCart.current = true;
+      Notifications.clearLastNotificationResponseAsync().catch(() => {});
+    };
+    Notifications.getLastNotificationResponseAsync().then((response) => { if (live) openCart(response); }).catch(() => {});
+    const subscription = Notifications.addNotificationResponseReceivedListener(openCart);
+    return () => { live = false; subscription.remove(); };
+  }, []);
+  return <NavigationContainer ref={navigation} onReady={() => {
+    if (pendingCart.current) { pendingCart.current = false; navigation.current.navigate('Cart'); }
+  }}>
     <Stack.Navigator screenOptions={{ headerTintColor: colors.text, contentStyle: { backgroundColor: colors.background } }}>
       <Stack.Screen name="Products" component={ProductListScreen} options={({ navigation }) => ({
         title: 'Nyan Shop',
