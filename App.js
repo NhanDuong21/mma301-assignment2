@@ -1,5 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import AppNavigator from './src/navigation/AppNavigator';
 import { CartProvider } from './src/contexts/CartContext';
 import { WishlistProvider } from './src/contexts/WishlistContext';
@@ -9,8 +9,15 @@ export default function App() {
   return (
     <SafeAreaProvider>
       <StatusBar style="dark" />
-      <CartProvider><WishlistProvider><NotificationProvider><AppNavigator /></NotificationProvider></WishlistProvider></CartProvider>
+      <SafeAreaView edges={['bottom']} style={{ flex: 1 }}>
+        <CartProvider>
+          <WishlistProvider>
+            <NotificationProvider>
+              <AppNavigator />
+            </NotificationProvider>
+          </WishlistProvider>
+        </CartProvider>
+      </SafeAreaView>
     </SafeAreaProvider>
   );
 }
-

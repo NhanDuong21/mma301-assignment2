@@ -9,37 +9,69 @@ import CartScreen from '../screens/CartScreen';
 import WishlistScreen from '../screens/WishlistScreen';
 import AIScreen from '../screens/AIScreen';
 import SettingsScreen from '../screens/SettingsScreen';
-import { Notifications } from '../services/notificationService';
+import { listenForCartNotification } from '../services/notificationService';
 
 const Stack = createNativeStackNavigator();
 export default function AppNavigator() {
   const navigation = useRef(null);
   const pendingCart = useRef(false);
   useEffect(() => {
-    let live = true;
-    const openCart = (response) => {
-      if (response?.notification?.request?.content?.data?.screen !== 'Cart') return;
+    const openCart = () => {
       if (navigation.current?.isReady()) navigation.current.navigate('Cart');
       else pendingCart.current = true;
-      Notifications.clearLastNotificationResponseAsync().catch(() => {});
     };
-    Notifications.getLastNotificationResponseAsync().then((response) => { if (live) openCart(response); }).catch(() => {});
-    const subscription = Notifications.addNotificationResponseReceivedListener(openCart);
-    return () => { live = false; subscription.remove(); };
+    return listenForCartNotification(openCart);
   }, []);
-  return <NavigationContainer ref={navigation} onReady={() => {
-    if (pendingCart.current) { pendingCart.current = false; navigation.current.navigate('Cart'); }
-  }}>
-    <Stack.Navigator screenOptions={{ headerTintColor: colors.text, contentStyle: { backgroundColor: colors.background } }}>
-      <Stack.Screen name="Products" component={ProductListScreen} options={({ navigation }) => ({
-        title: 'Nyan Shop',
-        headerRight: () => <Pressable accessibilityRole="button" onPress={() => navigation.navigate('Cart')}><Text style={{ color: colors.primary }}>Giỏ hàng</Text></Pressable>,
-      })} />
-      <Stack.Screen name="ProductDetail" component={ProductDetailScreen} options={{ title: 'Chi tiết sản phẩm' }} />
-      <Stack.Screen name="Cart" component={CartScreen} options={{ title: 'Giỏ hàng' }} />
-      <Stack.Screen name="Wishlist" component={WishlistScreen} options={{ title: 'Yêu thích trên Firebase' }} />
-      <Stack.Screen name="AI" component={AIScreen} options={{ title: 'Gemini tư vấn sản phẩm' }} />
-      <Stack.Screen name="Settings" component={SettingsScreen} options={{ title: 'Cài đặt & thông báo' }} />
-    </Stack.Navigator>
-  </NavigationContainer>;
+  return (
+    <NavigationContainer
+      ref={navigation}
+      onReady={() => {
+        if (pendingCart.current) {
+          pendingCart.current = false;
+          navigation.current.navigate('Cart');
+        }
+      }}
+    >
+      <Stack.Navigator
+        screenOptions={{
+          headerTintColor: colors.text,
+          contentStyle: { backgroundColor: colors.background },
+        }}
+      >
+        <Stack.Screen
+          name="Products"
+          component={ProductListScreen}
+          options={({ navigation }) => ({
+            title: 'Nyan Shop',
+            headerRight: () => (
+              <Pressable accessibilityRole="button" onPress={() => navigation.navigate('Cart')}>
+                <Text style={{ color: colors.primary }}>Giỏ hàng</Text>
+              </Pressable>
+            ),
+          })}
+        />
+        <Stack.Screen
+          name="ProductDetail"
+          component={ProductDetailScreen}
+          options={{ title: 'Chi tiết sản phẩm' }}
+        />
+        <Stack.Screen name="Cart" component={CartScreen} options={{ title: 'Giỏ hàng' }} />
+        <Stack.Screen
+          name="Wishlist"
+          component={WishlistScreen}
+          options={{ title: 'Yêu thích trên Firebase' }}
+        />
+        <Stack.Screen
+          name="AI"
+          component={AIScreen}
+          options={{ title: 'Gemini tư vấn sản phẩm' }}
+        />
+        <Stack.Screen
+          name="Settings"
+          component={SettingsScreen}
+          options={{ title: 'Cài đặt & thông báo' }}
+        />
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
 }
