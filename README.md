@@ -114,6 +114,22 @@ không chạy `npm audit fix --force` vì nó đề nghị hạ SDK/Firebase kh�
 
 Chưa thực hiện build EAS vì chưa có tài khoản/project/credentials được cấu hình.
 
+### Kiểm tra dịch vụ thật (tùy chọn)
+
+Điền `FIREBASE_PROJECT_ID` trong `server/.env` rồi chạy:
+
+```sh
+npm run verify:firebase
+# Khi proxy đang chạy, kiểm tra cả Gemini (dùng quota API thật):
+npm run verify:cloud
+```
+
+Script tạo hai tài khoản ẩn danh và một wishlist document riêng cho test, kiểm tra
+ghi/đọc và chặn đọc chéo UID, sau đó dọn các tài khoản/document do chính script tạo.
+Model mặc định hiện là `gemini-3.8-flash` với thinking level thấp cho nghiệp vụ tư vấn ngắn;
+kiểm tra model/quota khả dụng trên tài khoản trước khi dùng. Nút Hủy dừng chờ phía app;
+request đã gửi đến server có thể vẫn hoàn tất và dùng quota.
+
 ## Bản đồ code và tài liệu audit
 
 - `src/navigation/`: route và mở cart từ notification.

@@ -24,7 +24,7 @@ export default function AIScreen({ navigation }) {
       if (!controller.signal.aborted)
         setState({ loading: false, error: error.message, result: null });
     } finally {
-      busy.current = false;
+      if (active.current === controller) busy.current = false;
     }
   };
   return (
@@ -75,6 +75,18 @@ export default function AIScreen({ navigation }) {
           disabled={state.loading || !need.trim() || !aiProxyUrl || !firebaseConfigured}
           onPress={recommend}
         />
+        {state.loading && (
+          <Action
+            title="Hủy tư vấn"
+            secondary
+            onPress={() => {
+              active.current?.abort();
+              active.current = null;
+              busy.current = false;
+              setState({ loading: false, error: '', result: null });
+            }}
+          />
+        )}
         {!!state.error && (
           <Text accessibilityLiveRegion="polite" style={styles.error}>
             {state.error} Bạn vẫn có thể tự tìm và chọn sản phẩm trong Shop.

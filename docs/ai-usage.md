@@ -8,6 +8,7 @@
 | Chat: khởi tạo Expo từng bước | Tạo nền project | Blank JavaScript template, README | Export/Doctor; sinh viên đã mở màn hình mặc định LDPlayer |
 | Chat: gen theo phase, commit để audit | Tạo implementation để review | Navigation, API/hook, cart/storage, Firebase, proxy Gemini, notification, tests/docs | Export mỗi phase; automated tests; runtime catalog/detail/cart trên LDPlayer |
 | Test và runtime debug | Không tin code sinh ra khi chưa chạy | Sửa server syntax, kiểm tra stock AI, native notification fallback | Tham khảo debug-log và verification; external integration vẫn pending |
+| Chat: dùng màn hình tạo Firebase trên tài khoản được chỉ định | Cấu hình dịch vụ thật | Firebase Spark, Web App, Anonymous Auth, Firestore/rules; dùng Gemini key có sẵn | Config lưu trong .env bị ignore; live Firebase write/read/cross-UID-denial đã chạy; Gemini proxy kiểm tra riêng |
 
 ## Sinh viên audit lần lượt
 

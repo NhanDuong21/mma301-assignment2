@@ -39,11 +39,21 @@ async function readBody(req) {
   }
 }
 async function fetchJson(url, options = {}) {
-  const response = await fetch(url, { ...options, signal: AbortSignal.timeout(30000) });
-  if (!response.ok)
-    throw Object.assign(new Error('Dịch vụ bên ngoài chưa sẵn sàng. Vui lòng thử lại.'), {
-      status: 502,
-    });
+  const response = await fetch(url, { ...options, signal: AbortSignal.timeout(60000) });
+  if (!response.ok) {
+    const host = new URL(url).hostname;
+    const service = host.includes('generativelanguage')
+      ? 'Gemini'
+      : host.includes('identitytoolkit')
+        ? 'Firebase Auth'
+        : 'Catalog';
+    const detail = await response.json().catch(() => null);
+    const code = typeof detail?.error?.status === 'string' ? detail.error.status : '';
+    throw Object.assign(
+      new Error(`${service} chưa sẵn sàng (HTTP ${response.status} ${code}). Vui lòng thử lại.`),
+      { status: 502 },
+    );
+  }
   return response.json();
 }
 function createServer({ env = process.env, upstream = fetchJson } = {}) {
@@ -100,7 +110,7 @@ function createServer({ env = process.env, upstream = fetchJson } = {}) {
       const data = await upstream(`https://dummyjson.com${path}limit=24&skip=0`);
       const catalog = data.products.map(normalizeProduct);
       if (!catalog.length) return reply(res, 200, { recommendations: [] });
-      const model = env.GEMINI_MODEL || 'gemini-2.5-flash';
+      const model = env.GEMINI_MODEL || 'gemini-3.8-flash';
       if (!/^[a-zA-Z0-9._-]+$/.test(model)) throw new Error('Model không hợp lệ.');
       const response = await upstream(
         `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`,
@@ -135,6 +145,8 @@ function createServer({ env = process.env, upstream = fetchJson } = {}) {
               },
             ],
             generationConfig: {
+              maxOutputTokens: 2048,
+              ...(model.startsWith('gemini-3') ? { thinkingConfig: { thinkingLevel: 'low' } } : {}),
               responseMimeType: 'application/json',
               responseSchema: schema,
               temperature: 0.2,
@@ -158,15 +170,20 @@ function createServer({ env = process.env, upstream = fetchJson } = {}) {
       });
     } catch (error) {
       // Do not log tokens, request bodies, upstream payloads or keys.
-      reply(res, error.status || 502, {
-        error: error.status ? error.message : 'Không hoàn tất được tư vấn. Vui lòng thử lại.',
+      const timedOut = error.name === 'TimeoutError' || error.name === 'AbortError';
+      reply(res, error.status || (timedOut ? 504 : 502), {
+        error: timedOut
+          ? 'Dịch vụ phản hồi quá thời gian. Vui lòng thử lại sau; bạn vẫn có thể tự chọn sản phẩm.'
+          : error.status
+            ? error.message
+            : 'Không hoàn tất được tư vấn. Vui lòng thử lại.',
       });
     }
   });
 }
 if (require.main === module) {
   const server = createServer();
-  server.requestTimeout = 45000;
+  server.requestTimeout = 90000;
   server.listen(Number(process.env.PORT || 3001), process.env.HOST || '127.0.0.1', () =>
     console.log('AI proxy ready on configured HOST/PORT.'),
   );

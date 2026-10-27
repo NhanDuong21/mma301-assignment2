@@ -35,3 +35,10 @@ Các lỗi dưới đây được phát hiện và sửa trong quá trình tri�
   phải tránh evaluate khi native module không có.
 - Retest thực tế: LDPlayer hiển thị catalog, mở detail và thêm item; không còn màn hình lỗi.
 - Giới hạn: chưa xác minh delivery notification; cần binary preview có plugin/native module.
+
+## D04 — Key hợp lệ không đồng nghĩa model/luồng tư vấn đã hoạt động
+
+- Kiểm tra dịch vụ thật: ListModels trả 200, nhưng generateContent với 2.5-flash trả 404, thông báo không còn nhận người dùng mới.
+- Đổi sang model 3.8-flash theo phản hồi API; lời gọi đơn giản trả 200. Schema/catalog request qua proxy lại timeout; một model nhẹ hơn trả 503 và một model lite được list nhưng không truy cập được (404).
+- Điều chỉnh: model cấu hình ở server env, thinking low cho Gemini 3, giới hạn output, timeout rõ ràng, app có nút Hủy; proxy trả HTTP 504 cho timeout thay vì lỗi chung.
+- Retest: live Firebase vẫn PASS; test timeout 504 tự động PASS. End-to-end Gemini tư vấn **chưa PASS**, cần thử lại khi dịch vụ/model khả dụng ổn định. Không ghi nhận thành công giả.

@@ -13,11 +13,11 @@ Ngày: 2026-10-27. Không ghi PASS cho những case chưa chạy.
 | T06 | Cart add same item | Thêm cùng sản phẩm 2 lần → 1 dòng quantity 2, count/total đúng | AUTO PASS; UI detail count đổi 0→1→2 và Cart tổng $19.98 |
 | T07 | Quantity zero/remove | Giảm về 0/xóa → loại item; không vượt stock; 0/1/many totals | AUTO PASS; PENDING UI các thao tác remove |
 | T08 | Persistence restart | Có giỏ → reload/force close/open → giỏ giữ nguyên; không bị giỏ rỗng ghi đè | AUTO roundtrip PASS; UI reload PASS (quantity 2, $19.98); PENDING force-close/APK restart |
-| T09 | Firebase write/read | Save detail → Firestore document theo UID → refresh wishlist → đúng data | PENDING Firebase config/rules deployment |
-| T10 | Firebase error | Deny rules/ngắt mạng → báo lỗi, không ghi success giả, core cart dùng được | PENDING dịch vụ thật; timeout/error handling đã triển khai |
+| T09 | Firebase write/read | Save detail → Firestore document theo UID → refresh wishlist → đúng data | PASS live SDK write/read với tài khoản test; PENDING UI sau restart Metro |
+| T10 | Firebase error | Deny rules/ngắt mạng → báo lỗi, không ghi success giả, core cart dùng được | PASS rules thật chặn UID khác đọc chéo; PENDING offline/UI |
 | T11 | Notification denied | Từ chối quyền → phản hồi rõ, không crash, catalog/cart dùng được | PENDING OS permission; fallback thiếu native module đã kiểm tra |
 | T12 | Notification event | Bật khi cart có hàng → 60s nhận → tap mở cart; đổi cart update; rỗng/tắt cancel | PENDING preview APK/native module trên thiết bị |
-| T13 | Gemini valid | Cấu hình proxy → nhu cầu + catalog → response mapped; giá từ API | AUTO proxy/schema mapping PASS bằng fake upstream; PENDING Gemini thật |
+| T13 | Gemini valid | Cấu hình proxy → nhu cầu + catalog → response mapped; giá từ API | AUTO PASS; Gemini generate đơn giản PASS, end-to-end tư vấn chưa PASS do timeout/503; cần retest khi dịch vụ ổn định |
 | T14 | AI error/invalid | ID giả, trùng, stock0, sai JSON, timeout/quota → không action/render sai | AUTO boundary/invalid proxy PASS; PENDING cloud timeout/quota UI |
 | T15 | Release install/run | Build APK → cài → tắt Metro → chạy workflow + restart | PENDING EAS account/build/APK/install |
 

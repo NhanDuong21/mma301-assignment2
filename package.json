@@ -25,6 +25,8 @@
     "test": "node --test tests/*.test.cjs",
     "server": "node --env-file=server/.env server/index.cjs",
     "check:server": "node --check server/index.cjs",
+    "verify:cloud": "node --env-file=server/.env scripts/verify-cloud.cjs",
+    "verify:firebase": "node --env-file=server/.env scripts/verify-cloud.cjs --firebase-only",
     "check:deps": "expo install --check",
     "export:android": "expo export --platform android --output-dir .expo/export-check"
   },

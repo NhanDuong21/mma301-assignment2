@@ -13,7 +13,10 @@ Ngày thực hiện: 2026-10-27. Môi trường: Windows, Node 24, npm 11, Expo 
 - LDPlayer: quan sát catalog thật, mở detail, thêm cùng sản phẩm 2 lần, count 0→1→2; Cart hiển thị 2 × $9.99 = $19.98.
 - LDPlayer: Reload từ menu Expo, mở Cart lại vẫn giữ quantity 2 và tổng $19.98. Chưa kiểm tra force-close hoặc APK restart.
 - LDPlayer: phát hiện lỗi native notification và sửa; catalog/detail/cart phục hồi sau sửa D03.
-- Firebase thật/Gemini thật: CHƯA TEST — chưa có config/key.
+- Firebase project `mma301-assignment2-3c064`: đã tạo bằng trình duyệt, Spark, Firestore Standard tại `asia-southeast1`, Anonymous Auth bật, rules đã publish.
+- Firebase thật: Anonymous Auth PASS; ghi/đọc wishlist của chính UID PASS; UID khác đọc chéo bị `permission-denied` (PASS). Script dùng tài khoản/document test tự tạo rồi dọn chúng.
+- Gemini key có sẵn đã được lưu local (không commit); list models và một lời gọi generate thật PASS. Model 2.5-flash từ chối user mới (404), đã đổi sang 3.8-flash/thinking low. End-to-end tư vấn chưa PASS: các lần thử gặp timeout/503; model lite được liệt kê nhưng trả 404. Không suy ra PASS từ key hợp lệ. App/proxy có timeout và phản hồi lỗi, không tạo gợi ý giả.
+- Sau cấu hình thật: Android export PASS; regression suite cập nhật 11/11 PASS; `npm run verify:firebase` PASS. `npm run verify:cloud` còn thất bại ở bước Gemini.
 - Notification permission/delivery/tap: CHƯA TEST — Expo Go hiện thiếu module; cần preview APK.
 - EAS release APK/install/run không Metro: CHƯA THỰC HIỆN.
 
@@ -27,7 +30,7 @@ không dùng `--force`. Cần kiểm tra bản vá tương thích trước relea
 ## Checklist hoàn thiện trước nộp
 
 - [ ] Điền StudentName_ClassCode/quy ước lớp vào tên project.
-- [ ] Cấu hình Firebase Web App + Anonymous Auth + Firestore; deploy rules; test hai UID không đọc chéo.
+- [x] Cấu hình Firebase Web App + Anonymous Auth + Firestore; deploy rules; test hai UID không đọc chéo.
 - [ ] Cấu hình Gemini server env/model/quota và app proxy URL; gọi API thật, kiểm tra trường hợp lỗi.
 - [ ] Hoàn thiện manual cases T02–T15, kèm ảnh/log không chứa key/token.
 - [ ] Đăng nhập/gắn EAS project, cấu hình env preview; build/cài APK.

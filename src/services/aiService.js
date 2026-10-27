@@ -14,7 +14,7 @@ export async function recommendProducts(query, need, signal) {
   const output = await requestJson(`${aiProxyUrl}/recommend`, {
     method: 'POST',
     signal,
-    timeout: 45000,
+    timeout: 90000,
     headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
     body: JSON.stringify({ query: query.trim(), need: need.trim() }),
   });
