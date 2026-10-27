@@ -8,10 +8,15 @@ const { isIPv4 } = require('node:net');
 const wifiAddresses = Object.entries(os.networkInterfaces())
   .filter(([name]) => /wi-?fi|wlan/i.test(name))
   .flatMap(([, addresses]) => addresses)
-  .filter((item) => item.family === 'IPv4' && !item.internal && !item.address.startsWith('169.254.'));
-const host = process.env.LDPLAYER_HOST || (wifiAddresses.length === 1 ? wifiAddresses[0].address : '');
+  .filter(
+    (item) => item.family === 'IPv4' && !item.internal && !item.address.startsWith('169.254.'),
+  );
+const host =
+  process.env.LDPLAYER_HOST || (wifiAddresses.length === 1 ? wifiAddresses[0].address : '');
 if (!isIPv4(host)) {
-  console.error('Không xác định được IP Wi-Fi. PowerShell: $env:LDPLAYER_HOST="<IP-LAN>" rồi chạy lại.');
+  console.error(
+    'Không xác định được IP Wi-Fi. PowerShell: $env:LDPLAYER_HOST="<IP-LAN>" rồi chạy lại.',
+  );
   process.exit(1);
 }
 console.log(`LDPlayer Expo: exp://${host}:8081 | AI proxy: http://${host}:3001`);

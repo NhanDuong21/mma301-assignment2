@@ -51,12 +51,16 @@ Nếu dùng Ethernet, đặt `$env:LDPLAYER_HOST="<IP-LAN>"` trong PowerShell tr
 ### Các file chính
 
 - `index.js`: đăng ký component gốc của ứng dụng.
-- `App.js`: ghép providers, safe area và bộ điều hướng gốc.
+- `App.jsx`: ghép providers, safe area và bộ điều hướng gốc.
 - `app.json`: cấu hình tên, icon và các thiết lập Expo.
 - `package.json`: thư viện, phiên bản và lệnh chạy.
 - `package-lock.json`: khóa phiên bản dependency để cài lại nhất quán.
 - `assets/`: icon và ảnh có sẵn của template.
 - `.gitignore`: bỏ qua dependency, cache và file tự sinh khi dùng Git.
+
+Quy ước đuôi file: `.jsx` cho file chứa JSX (màn hình, component, navigation,
+App và Context Provider); `.js` cho logic không chứa JSX (hooks, services,
+storage, domain, config, theme và entry point). Import nội bộ không cần ghi đuôi file.
 
 ## Cấu hình Firebase
 

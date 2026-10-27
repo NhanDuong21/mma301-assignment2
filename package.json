@@ -18,6 +18,8 @@
     "react-native-screens": "~4.26.0"
   },
   "scripts": {
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
     "start": "expo start",
     "start:ldplayer": "node scripts/start-ldplayer.cjs",
     "android": "expo start --android",
@@ -31,5 +33,8 @@
     "check:deps": "expo install --check",
     "export:android": "expo export --platform android --output-dir .expo/export-check"
   },
-  "private": true
+  "private": true,
+  "devDependencies": {
+    "prettier": "3.6.2"
+  }
 }

@@ -2,14 +2,14 @@
 
 Đây là bản ghi **AI đã hỗ trợ phần lớn implementation**. Sinh viên chưa audit thì không được coi đã làm chủ code.
 
-| Task / prompt reference | Mục đích | Output áp dụng | Chỉnh sửa / kiểm chứng |
-|---|---|---|---|
-| Chat: tóm tắt Assignment 2 | Hiểu phạm vi | Tóm tắt yêu cầu PDF | Đối chiếu R01–R12 trong RTM; sinh viên đọc lại PDF |
-| Chat: khởi tạo Expo từng bước | Tạo nền project | Blank JavaScript template, README | Export/Doctor; sinh viên đã mở màn hình mặc định LDPlayer |
-| Chat: gen theo phase, commit để audit | Tạo implementation để review | Navigation, API/hook, cart/storage, Firebase, proxy Gemini, notification, tests/docs | Export mỗi phase; automated tests; runtime catalog/detail/cart trên LDPlayer |
-| Test và runtime debug | Không tin code sinh ra khi chưa chạy | Sửa server syntax, kiểm tra stock AI, native notification fallback | Tham khảo debug-log và verification; external integration vẫn pending |
-| Chat: dùng màn hình tạo Firebase trên tài khoản được chỉ định | Cấu hình dịch vụ thật | Firebase Spark, Web App, Anonymous Auth, Firestore/rules; dùng Gemini key có sẵn | Config lưu trong .env bị ignore; live Firebase write/read/cross-UID-denial đã chạy; Gemini proxy kiểm tra riêng |
-| Chat: tìm Flash-Lite còn dùng được, đổi và test | Khắc phục model không khả dụng/chậm | Chọn gemini-3.5-flash-lite từ ListModels và probe thực tế, thinking minimal; cập nhật script kiểm tra lặp | 12 regression tests PASS; 3 lời gọi tư vấn thật khớp catalog/ngân sách và 1 case catalog rỗng PASS |
+| Task / prompt reference                                       | Mục đích                             | Output áp dụng                                                                                            | Chỉnh sửa / kiểm chứng                                                                                          |
+| ------------------------------------------------------------- | ------------------------------------ | --------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------- |
+| Chat: tóm tắt Assignment 2                                    | Hiểu phạm vi                         | Tóm tắt yêu cầu PDF                                                                                       | Đối chiếu R01–R12 trong RTM; sinh viên đọc lại PDF                                                              |
+| Chat: khởi tạo Expo từng bước                                 | Tạo nền project                      | Blank JavaScript template, README                                                                         | Export/Doctor; sinh viên đã mở màn hình mặc định LDPlayer                                                       |
+| Chat: gen theo phase, commit để audit                         | Tạo implementation để review         | Navigation, API/hook, cart/storage, Firebase, proxy Gemini, notification, tests/docs                      | Export mỗi phase; automated tests; runtime catalog/detail/cart trên LDPlayer                                    |
+| Test và runtime debug                                         | Không tin code sinh ra khi chưa chạy | Sửa server syntax, kiểm tra stock AI, native notification fallback                                        | Tham khảo debug-log và verification; external integration vẫn pending                                           |
+| Chat: dùng màn hình tạo Firebase trên tài khoản được chỉ định | Cấu hình dịch vụ thật                | Firebase Spark, Web App, Anonymous Auth, Firestore/rules; dùng Gemini key có sẵn                          | Config lưu trong .env bị ignore; live Firebase write/read/cross-UID-denial đã chạy; Gemini proxy kiểm tra riêng |
+| Chat: tìm Flash-Lite còn dùng được, đổi và test               | Khắc phục model không khả dụng/chậm  | Chọn gemini-3.5-flash-lite từ ListModels và probe thực tế, thinking minimal; cập nhật script kiểm tra lặp | 12 regression tests PASS; 3 lời gọi tư vấn thật khớp catalog/ngân sách và 1 case catalog rỗng PASS              |
 
 ## Sinh viên audit lần lượt
 
