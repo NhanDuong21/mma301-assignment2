@@ -1,0 +1,22 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /users/{uid}/wishlist/{productId} {
+      function owner() { return request.auth != null && request.auth.uid == uid; }
+      allow read, delete: if owner();
+      allow create, update: if owner()
+        && request.resource.data.keys().hasAll(['id', 'title', 'price', 'description', 'thumbnail', 'category', 'stock', 'rating', 'savedAt'])
+        && request.resource.data.keys().hasOnly(['id', 'title', 'price', 'description', 'thumbnail', 'category', 'stock', 'rating', 'savedAt'])
+        && request.resource.data.id is int && request.resource.data.id > 0
+        && productId == string(request.resource.data.id)
+        && request.resource.data.title is string && request.resource.data.title.size() > 0 && request.resource.data.title.size() <= 300
+        && request.resource.data.price is number && request.resource.data.price >= 0
+        && request.resource.data.description is string && request.resource.data.description.size() <= 10000
+        && (request.resource.data.thumbnail == null || request.resource.data.thumbnail is string)
+        && request.resource.data.category is string
+        && request.resource.data.stock is int && request.resource.data.stock >= 0
+        && request.resource.data.rating is number
+        && request.resource.data.savedAt == request.time;
+    }
+  }
+}

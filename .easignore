@@ -1,0 +1,10 @@
+.git/
+node_modules/
+.expo/
+.env
+.env.*
+server/
+tests/
+docs/
+*.pdf
+README.md
