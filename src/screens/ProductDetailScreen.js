@@ -5,8 +5,10 @@ import { getProduct } from '../services/productService';
 import { money } from '../theme';
 import { useCart } from '../contexts/CartContext';
 import { quantityLimit } from '../domain/cart';
+import { useWishlist } from '../contexts/WishlistContext';
 export default function ProductDetailScreen({ route, navigation }) {
   const cart = useCart();
+  const wishlist = useWishlist();
   const [feedback, setFeedback] = useState('');
   const id = route.params?.productId;
   const [state, setState] = useState({ product: null, error: '', loading: true });
@@ -36,5 +38,9 @@ export default function ProductDetailScreen({ route, navigation }) {
       onPress={() => { cart.add(product); setFeedback('Đã thêm vào giỏ hàng.'); }} />
     {!!feedback && <Text accessibilityLiveRegion="polite" style={styles.body}>{feedback}</Text>}
     <Action title={`Xem giỏ hàng (${cart.itemCount})`} secondary onPress={() => navigation.navigate('Cart')} />
+    <Action title={wishlist.items.some((item) => item.id === product.id) ? 'Bỏ yêu thích' : 'Lưu yêu thích lên Firebase'} secondary
+      disabled={wishlist.loading || !wishlist.configured} onPress={() => wishlist.toggle(product)} />
+    {!wishlist.configured && <Text style={styles.body}>Firebase chưa cấu hình. Catalog và giỏ hàng vẫn dùng được.</Text>}
+    {!!wishlist.error && <Text style={styles.error}>{wishlist.error}</Text>}
   </ScrollView>;
 }
