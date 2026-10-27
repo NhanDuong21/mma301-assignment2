@@ -3,7 +3,11 @@ import { Image, ScrollView, Text } from 'react-native';
 import { Action, Message, styles } from '../components/ui';
 import { getProduct } from '../services/productService';
 import { money } from '../theme';
-export default function ProductDetailScreen({ route }) {
+import { useCart } from '../contexts/CartContext';
+import { quantityLimit } from '../domain/cart';
+export default function ProductDetailScreen({ route, navigation }) {
+  const cart = useCart();
+  const [feedback, setFeedback] = useState('');
   const id = route.params?.productId;
   const [state, setState] = useState({ product: null, error: '', loading: true });
   const [retry, setRetry] = useState(0);
@@ -27,6 +31,10 @@ export default function ProductDetailScreen({ route }) {
     <Text style={styles.title}>{money(product.price)}</Text>
     <Text style={styles.body}>{product.description}</Text>
     <Text style={styles.body}>Tồn kho: {product.stock}</Text>
-    <Action title="Giỏ hàng sẽ được nối ở phase 3" disabled />
+    <Action title={product.stock === 0 ? 'Hết hàng' : 'Thêm vào giỏ'}
+      disabled={(cart.items.find((item) => item.id === product.id)?.quantity || 0) >= quantityLimit(product)}
+      onPress={() => { cart.add(product); setFeedback('Đã thêm vào giỏ hàng.'); }} />
+    {!!feedback && <Text accessibilityLiveRegion="polite" style={styles.body}>{feedback}</Text>}
+    <Action title={`Xem giỏ hàng (${cart.itemCount})`} secondary onPress={() => navigation.navigate('Cart')} />
   </ScrollView>;
 }
