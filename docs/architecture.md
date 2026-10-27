@@ -19,7 +19,7 @@
 | Navigation | React Navigation 7 native stack, tương thích Expo Go; giữ `screens/` như đã thống nhất | Thêm route trong AppNavigator |
 | State | Context + reducer cho cart nhỏ; state request nằm trong hook | Có thể thay provider mà giữ UI contract |
 | API | DummyJSON; giá USD; service normalize/validate trước khi vào UI | Thay endpoint và mapper trong service |
-| Pagination | Server `limit/skip`; search dùng endpoint search, category kết hợp search dùng filter client trên tập category đã tải đầy đủ | Nếu đổi API cần đổi query contract, giữ hook/UI |
+| Pagination | Server `limit/skip`; search dùng endpoint search; hủy request cũ và kiểm tra generation trước khi update | Nếu đổi API cần đổi query contract, giữ hook/UI |
 | Persistence | AsyncStorage local cart, gate hydration, tuần tự hóa ghi để tránh ghi đè dữ liệu mới bằng snapshot cũ | Muốn sync đa thiết bị cần conflict policy |
 | Firebase | Anonymous Auth + Firestore wishlist theo UID, rules sở hữu; không dùng collection public | Đăng nhập thật cần link anonymous account |
 | Gemini | Proxy Node giữ key ở server; gửi context catalog, output JSON, map ID về catalog trước hiển thị | Thêm use case comparison cần schema/test khác |

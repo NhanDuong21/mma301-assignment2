@@ -1,6 +1,6 @@
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { ScrollView, Text, Pressable } from 'react-native';
+import { Text, Pressable } from 'react-native';
 import { colors } from '../theme';
 import ProductListScreen from '../screens/ProductListScreen';
 import ProductDetailScreen from '../screens/ProductDetailScreen';
@@ -16,12 +16,6 @@ export default function AppNavigator() {
       <Stack.Screen name="Products" component={ProductListScreen} options={({ navigation }) => ({
         title: 'Nyan Shop',
         headerRight: () => <Pressable accessibilityRole="button" onPress={() => navigation.navigate('Cart')}><Text style={{ color: colors.primary }}>Giỏ hàng</Text></Pressable>,
-        headerTitle: () => <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-          {[['Products', 'Shop'], ['Wishlist', 'Yêu thích'], ['AI', 'AI'], ['Settings', 'Cài đặt']].map(([route, title]) =>
-            <Pressable key={route} accessibilityRole="button" onPress={() => navigation.navigate(route)} style={{ paddingVertical: 10, paddingRight: 16 }}>
-              <Text style={{ color: colors.primary, fontWeight: '700' }}>{title}</Text>
-            </Pressable>)}
-        </ScrollView>,
       })} />
       <Stack.Screen name="ProductDetail" component={ProductDetailScreen} options={{ title: 'Chi tiết sản phẩm' }} />
       <Stack.Screen name="Cart" component={CartScreen} options={{ title: 'Giỏ hàng' }} />
