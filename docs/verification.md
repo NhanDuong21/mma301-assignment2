@@ -15,8 +15,11 @@ Ngày thực hiện: 2026-10-27. Môi trường: Windows, Node 24, npm 11, Expo 
 - LDPlayer: phát hiện lỗi native notification và sửa; catalog/detail/cart phục hồi sau sửa D03.
 - Firebase project `mma301-assignment2-3c064`: đã tạo bằng trình duyệt, Spark, Firestore Standard tại `asia-southeast1`, Anonymous Auth bật, rules đã publish.
 - Firebase thật: Anonymous Auth PASS; ghi/đọc wishlist của chính UID PASS; UID khác đọc chéo bị `permission-denied` (PASS). Script dùng tài khoản/document test tự tạo rồi dọn chúng.
-- Gemini key có sẵn đã được lưu local (không commit); list models và một lời gọi generate thật PASS. Model 2.5-flash từ chối user mới (404), đã đổi sang 3.8-flash/thinking low. End-to-end tư vấn chưa PASS: các lần thử gặp timeout/503; model lite được liệt kê nhưng trả 404. Không suy ra PASS từ key hợp lệ. App/proxy có timeout và phản hồi lỗi, không tạo gợi ý giả.
-- Sau cấu hình thật: Android export PASS; regression suite cập nhật 11/11 PASS; `npm run verify:firebase` PASS. `npm run verify:cloud` còn thất bại ở bước Gemini.
+- Gemini hiện dùng `gemini-3.5-flash-lite`, thinking `minimal`. Probe schema JSON thật PASS (900 ms); 3.1-flash-lite trả 503 nên không được chọn.
+- `npm run verify:cloud` PASS (2 gợi ý khớp catalog). `npm run verify:cloud -- --repeat` PASS: phone dưới $500 → 2 gợi ý (3137 ms), laptop dưới $1500 → 3 gợi ý (2286 ms), phone lần nữa → 2 gợi ý (2356 ms), từ khóa không có kết quả → 0 gợi ý (1119 ms). Cả 3 response AI khớp ID, còn hàng và nằm trong ngân sách test. Đây là kết quả tại thời điểm kiểm tra, không bảo đảm API bên ngoài luôn khả dụng.
+- Lỗi lịch sử: 2.5-flash trả 404 cho user mới; 3.8-flash timeout; bản 3.8-flash-lite text không tồn tại. Không dùng các model này trong cấu hình hiện tại.
+- Sau đổi Flash-Lite: regression suite 12/12 PASS (có test model mặc định/thinking/schema); `npm run verify:firebase` PASS; Gemini proxy end-to-end PASS. Android export trước đó đã PASS; UI trên LDPlayer được kiểm tra riêng.
+- Metro đã khởi động lại và manifest mới tại `http://10.64.174.136:8081/` trả HTTP 200, nạp `.env`. LDPlayer vẫn hiện bundle cache cũ với cảnh báo chưa cấu hình/không kết nối Expo CLI; chưa xác nhận thành công trên UI AI. Cần kết nối lại Expo Go với Metro mới trước khi test UI. Kết quả proxy thật ở trên không bị ảnh hưởng bởi cache trên máy ảo.
 - Notification permission/delivery/tap: CHƯA TEST — Expo Go hiện thiếu module; cần preview APK.
 - EAS release APK/install/run không Metro: CHƯA THỰC HIỆN.
 
@@ -31,7 +34,7 @@ không dùng `--force`. Cần kiểm tra bản vá tương thích trước relea
 
 - [ ] Điền StudentName_ClassCode/quy ước lớp vào tên project.
 - [x] Cấu hình Firebase Web App + Anonymous Auth + Firestore; deploy rules; test hai UID không đọc chéo.
-- [ ] Cấu hình Gemini server env/model/quota và app proxy URL; gọi API thật, kiểm tra trường hợp lỗi.
+- [x] Cấu hình Gemini server env/model và app proxy URL; gọi API thật, kiểm tra schema/catalog/budget và fallback bằng regression tests.
 - [ ] Hoàn thiện manual cases T02–T15, kèm ảnh/log không chứa key/token.
 - [ ] Đăng nhập/gắn EAS project, cấu hình env preview; build/cài APK.
 - [ ] Kiểm tra notification allow/deny, delivery, cold-start tap trên APK.

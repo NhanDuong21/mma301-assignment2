@@ -42,3 +42,9 @@ Các lỗi dưới đây được phát hiện và sửa trong quá trình tri�
 - Đổi sang model 3.8-flash theo phản hồi API; lời gọi đơn giản trả 200. Schema/catalog request qua proxy lại timeout; một model nhẹ hơn trả 503 và một model lite được list nhưng không truy cập được (404).
 - Điều chỉnh: model cấu hình ở server env, thinking low cho Gemini 3, giới hạn output, timeout rõ ràng, app có nút Hủy; proxy trả HTTP 504 cho timeout thay vì lỗi chung.
 - Retest: live Firebase vẫn PASS; test timeout 504 tự động PASS. End-to-end Gemini tư vấn **chưa PASS**, cần thử lại khi dịch vụ/model khả dụng ổn định. Không ghi nhận thành công giả.
+
+### D04 — Retest sau khi chuyển Flash-Lite
+
+- Chọn từ ListModels thực tế và probe generateContent: 3.5-flash-lite trả HTTP 200 + JSON hợp lệ trong 900 ms; 3.1-flash-lite trả 503.
+- Fix cấu hình: mặc định/env dùng `gemini-3.5-flash-lite`, thinking `minimal`; không suy đoán tên model từ phiên bản mới hơn.
+- Retest `verify:cloud` PASS; `verify:cloud -- --repeat` PASS 3 lời gọi tư vấn thật (phone/laptop/phone) và 1 case catalog không có kết quả. Các gợi ý khớp ID, tồn kho, ngân sách. Luồng proxy end-to-end hiện đã PASS.

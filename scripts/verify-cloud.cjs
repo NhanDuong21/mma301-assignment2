@@ -49,31 +49,59 @@ async function run() {
     );
     console.log('Firestore cross-UID read denied: PASS');
     if (process.argv.includes('--firebase-only')) return;
-    const response = await fetch('http://127.0.0.1:3001/recommend', {
-      method: 'POST',
-      signal: AbortSignal.timeout(90000),
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${await users[0].getIdToken()}`,
-      },
-      body: JSON.stringify({ query: 'phone', need: 'Tôi cần điện thoại dưới 500 USD để học tập.' }),
-    });
-    const output = await response.json();
-    assert.equal(
-      response.status,
-      200,
-      `Proxy HTTP ${response.status}: ${output.error || 'request failed'}`,
-    );
-    const catalog = (
-      await (
-        await fetch('https://dummyjson.com/products/search?q=phone&limit=24&skip=0', {
-          signal: AbortSignal.timeout(15000),
-        })
-      ).json()
-    ).products.map(normalizeProduct);
-    const mapped = validateRecommendations(output, catalog);
-    assert.ok(mapped.length > 0, 'Expected at least one matching real product for smoke input.');
-    console.log(`Real Gemini proxy + catalog validation: PASS (${mapped.length} recommendations)`);
+    const cases = [{ query: 'phone', budget: 500 }];
+    if (process.argv.includes('--repeat'))
+      cases.push(
+        { query: 'laptop', budget: 1500 },
+        { query: 'phone', budget: 500 },
+        { query: 'zzzznohitmma301', budget: 500, empty: true },
+      );
+    for (const sample of cases) {
+      const started = Date.now();
+      const response = await fetch('http://127.0.0.1:3001/recommend', {
+        method: 'POST',
+        signal: AbortSignal.timeout(90000),
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${await users[0].getIdToken()}`,
+        },
+        body: JSON.stringify({
+          query: sample.query,
+          need: `Tôi cần ${sample.query} dưới ${sample.budget} USD để học tập.`,
+        }),
+      });
+      const output = await response.json();
+      assert.equal(
+        response.status,
+        200,
+        `Proxy HTTP ${response.status}: ${output.error || 'request failed'}`,
+      );
+      const catalog = (
+        await (
+          await fetch(
+            `https://dummyjson.com/products/search?q=${encodeURIComponent(sample.query)}&limit=24&skip=0`,
+            {
+              signal: AbortSignal.timeout(15000),
+            },
+          )
+        ).json()
+      ).products.map(normalizeProduct);
+      const mapped = validateRecommendations(output, catalog);
+      if (sample.empty) assert.equal(mapped.length, 0);
+      else {
+        assert.ok(
+          mapped.length > 0,
+          'Expected at least one matching real product for smoke input.',
+        );
+        assert.ok(
+          mapped.every(({ product }) => product.price <= sample.budget),
+          'Recommendations must fit the smoke-test budget.',
+        );
+      }
+      console.log(
+        `Real proxy ${sample.query}: PASS (${mapped.length} recommendations, ${Date.now() - started} ms)`,
+      );
+    }
   } finally {
     if (wrote)
       await deleteDoc(reference).catch(() => console.log('Test wishlist cleanup pending.'));

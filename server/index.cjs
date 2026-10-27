@@ -110,7 +110,7 @@ function createServer({ env = process.env, upstream = fetchJson } = {}) {
       const data = await upstream(`https://dummyjson.com${path}limit=24&skip=0`);
       const catalog = data.products.map(normalizeProduct);
       if (!catalog.length) return reply(res, 200, { recommendations: [] });
-      const model = env.GEMINI_MODEL || 'gemini-3.8-flash';
+      const model = env.GEMINI_MODEL || 'gemini-3.5-flash-lite';
       if (!/^[a-zA-Z0-9._-]+$/.test(model)) throw new Error('Model không hợp lệ.');
       const response = await upstream(
         `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`,
@@ -146,7 +146,13 @@ function createServer({ env = process.env, upstream = fetchJson } = {}) {
             ],
             generationConfig: {
               maxOutputTokens: 2048,
-              ...(model.startsWith('gemini-3') ? { thinkingConfig: { thinkingLevel: 'low' } } : {}),
+              ...(model.startsWith('gemini-3')
+                ? {
+                    thinkingConfig: {
+                      thinkingLevel: model.includes('flash-lite') ? 'minimal' : 'low',
+                    },
+                  }
+                : {}),
               responseMimeType: 'application/json',
               responseSchema: schema,
               temperature: 0.2,

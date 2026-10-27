@@ -8,7 +8,8 @@ Catalog DummyJSON → tìm kiếm/phân trang/refresh → chi tiết → thêm/s
 Wishlist dùng Firebase Anonymous Auth + Firestore. Gemini tư vấn theo tối đa 24 kết quả
 catalog thực qua proxy Node. Thông báo local nhắc giỏ hàng sau 60 giây khi người dùng bật.
 
-**Trạng thái:** code tích hợp đã có; Firebase/Gemini cần cấu hình và xác minh với dịch vụ thật.
+**Trạng thái:** Firebase và Gemini Flash-Lite đã được kiểm tra với dịch vụ thật trên môi trường local.
+Khi cài mới, cần tự điền các file `.env` theo hướng dẫn bên dưới.
 Chưa có APK/AAB release. Không coi Android JS export là bằng chứng cài/chạy release.
 
 ### Chạy project
@@ -126,9 +127,17 @@ npm run verify:cloud
 
 Script tạo hai tài khoản ẩn danh và một wishlist document riêng cho test, kiểm tra
 ghi/đọc và chặn đọc chéo UID, sau đó dọn các tài khoản/document do chính script tạo.
-Model mặc định hiện là `gemini-3.8-flash` với thinking level thấp cho nghiệp vụ tư vấn ngắn;
+Model mặc định hiện là `gemini-3.5-flash-lite` với thinking level `minimal` cho nghiệp vụ tư vấn ngắn;
 kiểm tra model/quota khả dụng trên tài khoản trước khi dùng. Nút Hủy dừng chờ phía app;
 request đã gửi đến server có thể vẫn hoàn tất và dùng quota.
+
+Kiểm tra lặp với điện thoại, laptop và từ khóa rỗng kết quả:
+
+```sh
+npm run verify:cloud -- --repeat
+```
+
+Lệnh này gọi Gemini thật 3 lần và kiểm tra thêm catalog không có kết quả; chỉ chạy khi cần retest.
 
 ## Bản đồ code và tài liệu audit
 

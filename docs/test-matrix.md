@@ -17,7 +17,7 @@ Ngày: 2026-10-27. Không ghi PASS cho những case chưa chạy.
 | T10 | Firebase error | Deny rules/ngắt mạng → báo lỗi, không ghi success giả, core cart dùng được | PASS rules thật chặn UID khác đọc chéo; PENDING offline/UI |
 | T11 | Notification denied | Từ chối quyền → phản hồi rõ, không crash, catalog/cart dùng được | PENDING OS permission; fallback thiếu native module đã kiểm tra |
 | T12 | Notification event | Bật khi cart có hàng → 60s nhận → tap mở cart; đổi cart update; rỗng/tắt cancel | PENDING preview APK/native module trên thiết bị |
-| T13 | Gemini valid | Cấu hình proxy → nhu cầu + catalog → response mapped; giá từ API | AUTO PASS; Gemini generate đơn giản PASS, end-to-end tư vấn chưa PASS do timeout/503; cần retest khi dịch vụ ổn định |
+| T13 | Gemini valid | Cấu hình proxy → nhu cầu + catalog → response mapped; giá từ API | PASS live proxy với 3.5-flash-lite: phone/laptop/phone, 3 response hợp lệ, khớp catalog/ngân sách; UI kiểm tra riêng |
 | T14 | AI error/invalid | ID giả, trùng, stock0, sai JSON, timeout/quota → không action/render sai | AUTO boundary/invalid proxy PASS; PENDING cloud timeout/quota UI |
 | T15 | Release install/run | Build APK → cài → tắt Metro → chạy workflow + restart | PENDING EAS account/build/APK/install |
 
