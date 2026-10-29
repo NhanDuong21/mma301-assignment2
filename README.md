@@ -14,14 +14,17 @@ Chưa có APK/AAB release. Không coi Android JS export là bằng chứng cài/
 
 ### Chạy project
 
-Yêu cầu: Node.js 22+ (máy hiện tại Node 24), npm, Android/LDPlayer với Expo Go tương thích SDK 57.
+Yêu cầu: Node.js 22.13+ hoặc 24.3+ thuộc dòng LTS (máy hiện tại Node 24), npm,
+Android/LDPlayer với Expo Go tương thích SDK 58 hoặc development build cho SDK 58.
 
 ```sh
 npm install
 npm start -- --clear
 ```
 
-Android: mở Expo Go tương thích SDK 57, quét mã QR trong terminal hoặc nhập URL `exp://<IP-máy-tính>:8081`.
+Android: mở Expo Go tương thích SDK 58, quét mã QR trong terminal hoặc nhập URL `exp://<IP-máy-tính>:8081`.
+Expo Go SDK 57 không chạy được project đã nâng cấp. Nếu chưa có Expo Go SDK 58,
+dùng development build; bản development/preview APK cũ cần build lại sau khi nâng SDK.
 Máy tính và điện thoại nên dùng cùng mạng Wi-Fi.
 Nếu dùng Android Emulator, mở máy ảo trước rồi nhấn `a` trong terminal Expo.
 

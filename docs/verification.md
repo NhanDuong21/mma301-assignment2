@@ -1,5 +1,16 @@
 # Verification và việc còn lại
 
+## Nâng Expo SDK 58 — 2026-10-29
+
+- Expo `58.0.21` (npm `latest` tại thời điểm nâng), React `19.3.0`, React Native `0.88.0`.
+- Đồng bộ dependency bằng `npx expo install --fix`; CLI thêm plugin `expo-status-bar`.
+- `npm test`: 12/12 PASS; `npm run check:deps`: PASS; Expo Doctor: 20/20 PASS.
+- `npm run export:android`: PASS (970 modules). Chưa kiểm tra UI/notification trên thiết bị hoặc build APK sau nâng cấp.
+- Cần Expo Go tương thích SDK 58 hoặc build lại development/preview APK.
+- npm báo 12 vulnerability (5 low, 7 high) sau cài đặt; chưa xử lý trong lần nâng SDK này.
+
+## Kiểm tra trước nâng cấp
+
 Ngày thực hiện: 2026-10-27. Môi trường: Windows, Node 24, npm 11, Expo SDK 57.
 
 ## Kết quả thực tế
